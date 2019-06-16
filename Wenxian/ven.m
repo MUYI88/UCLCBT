@@ -12,7 +12,7 @@ lreturns_24   =log(close(25:end))-log(close(1:end-24));
 lreturns_168   =log(close(169:end))-log(close(1:end-168));
 
 
-%% Aggregation of returns %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Aggregation of returns %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tau = 1*24; % Number of hours for aggregation of returns 
 
