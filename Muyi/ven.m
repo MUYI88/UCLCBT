@@ -1,6 +1,6 @@
 t=datestr(719529+time/86400,'dd-mmm-yyyy HH:MM:SS') %更改时间
 
-%% logreturns and returns
+%% logreturns and returnsssss
 returns      = diff(close)./close(1:end-1,:);
 returns_12    =(close(13:end)-close(1:end-12))./close(1:end-12,:);
 returns_24   =(close(25:end)-close(1:end-24))./close(1:end-24,:);
