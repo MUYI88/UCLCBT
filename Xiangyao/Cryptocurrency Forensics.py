@@ -158,7 +158,7 @@ print(pd.isnull(c)) # 判断是否series里有NaN值
 print(c.isnull())
 
 ####### DATA ######
-url='https://data.ripple.com/v2/transactions/?start=2019-04-26T00:00:00z&end=2019-04-26T00:00:12&result=tesSUCCESS&limit=100&marker=mark'
+url='https://data.ripple.com/v2/transactions/?start=2019-04-26T00:00:00z&end=2019-04-26T00:00:12&result=tesSUCCESS&limit=100&marker=+mark'
 r=requests.get(url)
 response_dict=r.json()
 mark=response_dict['marker']
