@@ -6,6 +6,10 @@ Created on Tue Jun 25 15:29:06 2019
 @author: guisier
 """
 
+from IPython import get_ipython;   
+get_ipython().magic('reset -sf')
+
+
 import pandas as pd
 import numpy as np
 from cryptocmd import CmcScraper
@@ -23,12 +27,13 @@ from sklearn.metrics import mean_squared_error
 import pyflux as pf
 from math import sqrt
 import pyflux as pf
+import matplotlib.pyplot as plt
 
 
 
 #ripple data 5 years
 # initialise scraper without time interval
-scraper = CmcScraper("XRP","01-06-2014", "31-05-2019")
+scraper = CmcScraper("XRP","01-06-2014", "02-06-2019")
 # get raw data as list of list
 headers, data = scraper.get_data()
 # get data in a json format
@@ -39,7 +44,7 @@ scraper.export("csv", name="xrp_all_time")
 df = scraper.get_dataframe()
 
 #bitcoin data 5 years
-scraper1 = CmcScraper("BTC","01-06-2014", "31-05-2019")
+scraper1 = CmcScraper("BTC","01-06-2014", "02-06-2019")
 # get raw data as list of list
 headers, data = scraper1.get_data()
 # get data in a json format
@@ -49,31 +54,29 @@ scraper1.export("csv", name="btc_all_time")
 # Pandas dataFrame for the same data
 dfB = scraper1.get_dataframe()
 
-# daily price figure
+# daily price (figure 3.1) 
 Date=df['Date']
 Close=df['Close']
 DateB=dfB['Date']
 CloseB=dfB['Close']
-import matplotlib.pyplot as plt
-
 
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
-ax1.plot(Date, Close,linewidth = '0.5',color='b',label='Ripple')
+ax1.plot(Date, Close,linewidth = '0.5',color='b',label='XRP')
 plt.legend(loc=2)
 ax1.tick_params(axis='y', colors='b')
-ax1.set_ylabel('Ripple',color='b')
+ax1.set_ylabel('XRP',color='b')
 
 ax1.set_title('Daily closing price $')
 ax2 = ax1.twinx()  # this is the important function
-ax2.plot(DateB, CloseB, linewidth = '0.5',color='r',label='Bitcoin')
+ax2.plot(DateB, CloseB, linewidth = '0.5',color='r',label='BTC')
 plt.legend(loc=1)
 ax2.tick_params(axis='y', colors='r')
-ax2.set_ylabel('Bitcoin',color='r')
+ax2.set_ylabel('BTC',color='r')
 plt.show()
 
 
-# daily log return figure
+# daily log return 
 df = scraper.get_dataframe()
 dfdaily=df[::-1]
 dfdaily['CS']=df['Market Cap']/df['Close']
@@ -94,7 +97,7 @@ dfdailyB=dfdailyB.dropna(axis=0,how='any')
 log_ret_B=dfdailyB['log_ret_B']
 CS=dfdaily['CS']
 
-# weekly log return figure
+# weekly log return 
 df = scraper.get_dataframe()
 dfweek=df[::-1]
 dfweek=dfweek[::7]
@@ -118,20 +121,29 @@ DateB=dfdailyB['Date']
 DateWR=dfweek['Date']
 DateWB=dfweekB['Date']
 
-plt.subplot(211)
+#use BTC to price XRP
+excess_ret=log_ret_R-log_ret_B
+
+# figure 3.2, three subplots together
+plt.figure(figsize=(10,10))
+plt.subplot(311)
 plt.title('Daily log-return')
-plt.plot(Date,log_ret_R,linewidth = '0.3',color='b',label='Ripple',alpha=0.5)
-plt.plot(DateB,log_ret_B,linewidth = '0.4',color='r',label='Bitcoin',alpha=0.7)
+plt.plot(Date,log_ret_R,linewidth = '0.5',color='b',label='XRP',alpha=0.5)
+plt.plot(DateB,log_ret_B,linewidth = '0.5',color='r',label='BTC',alpha=0.7)
 plt.legend()
-plt.subplot(212)
+plt.subplot(312)
 plt.title('Weekly log-return')
-plt.plot(DateWR,log_ret_weekR,linewidth = '0.5',color='b',label='Ripple')
-plt.plot(DateWB,log_ret_weekB,linewidth = '0.5',color='r',label='Bitcoin')
+plt.plot(DateWR,log_ret_weekR,linewidth = '0.5',color='b',label='XRP')
+plt.plot(DateWB,log_ret_weekB,linewidth = '0.5',color='r',label='BTC')
+plt.legend()
+plt.subplot(313)
+plt.title('XRP log-return minus BTC log-return')
+plt.plot(Date,excess_ret,linewidth = '0.5',color='b',label='R-B')
 plt.legend()
 plt.tight_layout()
 plt.show()
 
-# statistical Properties for 5 years daily log-returns
+# statistical Properties for 5 years daily log-returns  (table 3.1)
 np.mean(log_ret_R)
 np.std(log_ret_R)
 np.min(log_ret_R)
@@ -146,8 +158,7 @@ np.max(log_ret_B)
 log_ret_B.skew(axis=0)
 log_ret_B.kurt(axis=0)
 
-#ripple 用bitcoin来定价的 log return,看作一个新的time series
-excess_ret=log_ret_R-log_ret_B
+
 np.mean(excess_ret)
 np.std(excess_ret)
 np.min(excess_ret)
@@ -155,19 +166,39 @@ np.max(excess_ret)
 excess_ret.skew(axis=0)
 excess_ret.kurt(axis=0)
 
+#histograms (figure 3.3)
+plt.figure(figsize=(20,20))
+num_bins = 1000
+n, bins, patches = plt.hist(excess_ret, num_bins, facecolor='blue', alpha=0.5)
+plt.title('Histogram of R-B')
+plt.show()
 
-#用1，2年的ripple log return - botcoin log return 进行fit
+plt.figure(figsize=(20,10))
+num_bins = 1000
+n, bins, patches = plt.hist(log_ret_R, num_bins, facecolor='blue', alpha=0.5)
+plt.title('Histogram of XRP')
+plt.show()
+
+plt.figure(figsize=(20,10))
+num_bins = 1000
+n, bins, patches = plt.hist(log_ret_B, num_bins, facecolor='blue', alpha=0.5)
+plt.title('Histogram of BTC')
+plt.show()
+
+
+# in-sample data 
 train=[]
-train[0:730]=excess_ret[0:730]
+train[0:728]=excess_ret[0:728]
 
 
-# 分解decomposing, make sure it's no trend and seaonality
+# decomposing, make sure it's no trend and seaonality (figure 3.4)
 from statsmodels.tsa.seasonal import seasonal_decompose
 res = seasonal_decompose(train, model='additive',freq = 1)
 res.plot()
 plt.show()
 
-#log return is stationary
+# check the stationarity (Table 3.2)
+# ADF
 from statsmodels.tsa.stattools import adfuller
 result = adfuller(train, autolag='AIC')
 print('ADF Statistic: %f' % result[0])
@@ -175,13 +206,31 @@ print('p-value: %f' % result[1])
 print('Critical Values:')
 for key, value in result[4].items():
 	print('\t%s: %.3f' % (key, value))
-# We can see that our statistic value of -11.935466 is less than the value of -3.439 
+# We can see that our statistic value of -11.895804 is less than the value of -3.439 
 #at 1% or 5% or 10%. This suggests that we can reject the null hypothesis with 
 #a significance level of less than 1% or 5% or 10% 
 #Rejecting the null hypothesis means that the process has no unit root, 
 #and in turn that the time series is stationary or does not have time-dependent structure.
+#define function for ADF test
 
-#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+# ADF 
+def adf_test(timeseries):
+    #Perform Dickey-Fuller test:
+    print ('Results of Dickey-Fuller Test:')
+    dftest = adfuller(train, autolag='AIC')
+    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic','p-value','#Lags Used','Number of Observations Used'])
+    for key,value in dftest[4].items():
+       dfoutput['Critical Value (%s)'%key] = value
+    print (dfoutput)
+adf_test(train)
+
+# KPSS
+from statsmodels.tsa.stattools import kpss
+kpsstest = kpss(train, regression='c')
+kpsstest
+
+# white noise test
+# p value less than 0.5,not white noise 
 from statsmodels.stats.diagnostic import acorr_ljungbox
 #返回统计量和p值
 noiseRes = acorr_ljungbox(train, lags=1)
@@ -190,6 +239,7 @@ for x in noiseRes:
     print(x,'|', end=" ")
 
 
+# ACF abd PACF plots for in-sample data (figure 4.1)
 import statsmodels.api as sm
 plt.figure(figsize=(10,10))
 ax = plt.subplot(211)
@@ -200,7 +250,7 @@ plt.tight_layout()
 plt.show()
 
 #according to acf and pacf, candidate model: 
-#arma(1,1) arma(4,0) arma(0,1) arima(0,4)
+#arma(1,1) arma(4,1) arma(0,1) arima(0,4)
 
 #use order select to decide the order
 # statsmodels.tsa.stattools.arma_order_select_ic(y, max_ar=4, max_ma=2, ic='bic', trend='c', model_kw={}, fit_kw={})
@@ -210,7 +260,7 @@ res = arma_order_select_ic(train,ic=['aic','bic'],trend='nc')
 res.bic_min_order #(0,1)
 res.aic_min_order #(4,1)
 
-# 结果是（4,1）            
+# another way, also (4,1)           
 best_aic = np.inf 
 best_order = None
 best_mdl = None
@@ -232,9 +282,13 @@ for i in rng:
                         
 print('aic: %6.2f | order: %s'%(best_aic, best_order))
 
-# 首先试着用arma（4，1）来model mean 
-model = ARMA(train, order=(4,1))
+
+# first try ARMA(0,4) to model mean, error square has correlation so still need garch model, 
+# parameters can change, like ARMA(0,1), ARMA(4,1)  
+
+model = ARMA(train, order=(0,4))
 model_fit = model.fit(disp=-1)
+print(model_fit.summary())
 plt.plot(train,linewidth='0.7')
 plt.plot(model_fit.fittedvalues, color='red',linewidth='0.7')
 
@@ -248,20 +302,12 @@ plt.subplot(212)
 plt.plot(errorsq,label='squared residual')
 plt.legend(loc=0)
 
+# Table 4.1
 DataFrame(error).plot(kind='kde')
 pyplot.show()
 print(DataFrame(error).describe())
 
-
-#序列进行混成检验（Ljung-Box）原假设H0:序列没有相关性，备择假设H1:序列具有相关性
-m = 25 # 我们检验25个自相关系数
-acf,q,p = sm.tsa.acf(errorsq,nlags=m,qstat=True)  ## 计算自相关系数 及p-value
-out = np.c_[range(1,26), acf[1:], q, p]
-output=pd.DataFrame(out, columns=['lag', "AC", "Q", "P-value"])
-output = output.set_index('lag')
-output   #p-value小于显著性水平0.05，我们拒绝原假设，即认为序列具有相关性。因此具有ARCH效应。
-
-# 看下square residual序列的acf和pacf
+# ACF and PACF plots of residual squared for different ARMA models (figure 4.2)
 import statsmodels.api as sm
 plt.figure(figsize=(10,10))
 ax = plt.subplot(211)
@@ -272,257 +318,673 @@ plt.tight_layout()
 plt.show()
 
 
-# 用arma（4，1）arch（3）validate 3，4年
-validate=[]
-validate[0:730]=excess_ret[730:1460]
+
+
+
+
+
+
+
+#from the pacf, arch(3), arch(10),arch(19),GARCH(1,1)
+
+# arma（4，1)-arch(3)
+model = ARMA(train, order=(4,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = coefficients[5]
 
 am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=3) 
 res = am.fit()
 print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:4]
+alpha = alp[::-1]
 
-model = ARMA(train, order=(4,1))
-model_fit = model.fit(disp=-1)
-print(model_fit.summary())
-
-
-coef1 = np.array([0.0818,0.0360,-0.1881,0.7529])
-miu1 = 0.0006
-coef2 = -0.5439
-alpha = np.array([0.0993,0.0936,0.4078])
-omega1 = 0.0011243
-
-
-y = train[726:730]
-err=np.array([0.0019030288658085596])
-errorsq=error**2
-epsilonsq=errorsq[727:730]
-p=4
-q1=1
-q2=3
-for i in range(0,730):
-    mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
-    sigmasq = np.sum(epsilonsq[i:(i+q2)]*alpha)+omega1
-    epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq))
-    y = np.append(y,mean+epsilon_t)
-    epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
-    err=np.append(err, epsilon_t)
-
-plt.plot(y[4:],color='red')
-plt.plot(validate,linewidth='0.7')
-
-# 用arma（1，1）arch（3）validate 3，4年
-model = ARMA(train, order=(1,1))
-model_fit = model.fit(disp=-1)
-plt.plot(train,linewidth='0.7')
-plt.plot(model_fit.fittedvalues, color='red',linewidth='0.7')
 
 error = train -  model_fit.fittedvalues
-errorsq = np.square(error)
-
-validate=[]
-validate[0:730]=excess_ret[730:1460]
-
-am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=3) 
-res = am.fit()
-print(res.summary())
-
-model = ARMA(train, order=(1,1))
-model_fit = model.fit(disp=-1)
-print(model_fit.summary())
-
-
-coef1 = np.array([-0.0563])
-miu1 = 0.0007
-coef2 = 0.2719
-alpha = np.array([0.0905,0.0923,0.4182])
-omega1 = 0.0011128
-
-
-y = train[729:730]
-err=np.array([-0.00157639112])
 errorsq=error**2
-epsilonsq=errorsq[727:730]
-p=1
-q1=1
-q2=3
+zero=np.zeros([2])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=3
 for i in range(0,730):
-    mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
-    sigmasq = np.sum(epsilonsq[i:(i+q2)]*alpha)+omega1
-    epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq))
-    y = np.append(y,mean+epsilon_t)
-    epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
-    err=np.append(err, epsilon_t)
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
 
-plt.plot(y[1:],color='red')
-plt.plot(validate,linewidth='0.7')
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
 
-
-
-# 用arma（4，1）arch（10）validate 3，4年
-validate=[]
-validate[0:730]=excess_ret[730:1460]
-
+# arma（4，1)-arch(10)
 model = ARMA(train, order=(4,1))
 model_fit = model.fit(disp=-1)
 print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = coefficients[5]
 
 am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=10) 
 res = am.fit()
 print(res.summary())
-
-coef1 = np.array([0.0818,0.0360,-0.1881,0.7529])
-miu1 = 0.0006
-coef2 = -0.5439
-alpha = np.array([0.0808,0.0109,0.00057931,0.00081997,0.0186,0.0211,0.0124,0.0589,0.0812,0.3772])
-omega1 = 0.00093235
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:11]
+alpha = alp[::-1]
 
 
-y = train[726:730]
-err=np.array([0.0019030288658085596])
+error = train -  model_fit.fittedvalues
 errorsq=error**2
-epsilonsq=errorsq[720:730]
-p=4
-q1=1
-q2=10
+zero=np.zeros([9])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=10
 for i in range(0,730):
-    mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
-    sigmasq = np.sum(epsilonsq[i:(i+q2)]*alpha)+omega1
-    epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq))
-    y = np.append(y,mean+epsilon_t)
-    epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
-    err=np.append(err, epsilon_t)
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
 
-plt.plot(y[4:],color='red')
-plt.plot(validate,linewidth='0.7')
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
 
-
-# 用arma（4，1）arch（19）validate 3，4年
-validate=[]
-validate[0:730]=excess_ret[730:1460]
-
+# arma（4，1)-arch(19)
 model = ARMA(train, order=(4,1))
 model_fit = model.fit(disp=-1)
 print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = coefficients[5]
 
 am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=19) 
 res = am.fit()
 print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:20]
+alpha = alp[::-1]
 
-coef1 = np.array([0.0818,0.0360,-0.1881,0.7529])
-miu1 = 0.0006
-coef2 = -0.5439
-alpha = np.array([0,0,0,0.0153,0,0,0,0.0531,0.0174,0.0727,0,0,0,0.0285,0.0213,0.0028224,0.1068,0.0812,0.3405])
-omega1 = 0.00076513
-
-
-y = train[726:730]
-err=np.array([0.0019030288658085596])
-errorsq=error**2
-epsilonsq=errorsq[711:730]
-p=4
-q1=1
-q2=19
-for i in range(0,730):
-    mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
-    sigmasq = np.sum(epsilonsq[i:(i+q2)]*alpha)+omega1
-    epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq))
-    y = np.append(y,mean+epsilon_t)
-    epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
-    err=np.append(err, epsilon_t)
-
-plt.plot(y[4:],color='red',linewidth='0.9')
-plt.plot(validate,linewidth='0.7')
-
-
-
-#choose arma(0,1)-arch(3) to forecast year 5
-train=[]
-train[0:1460]=excess_ret[0:1460]
-
-
-model = ARMA(train, order=(0,1))
-model_fit = model.fit(disp=-1)
-print(model_fit.summary())
 
 error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([18])
+errorsq= np.append(zero,errorsq)
 
+sigma0=np.array([omega1])
+p2=19
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（4，1)-GARCH(1,1)
+model = ARMA(train, order=(4,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = coefficients[5]
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH')
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alpha = coefficients2[1]
+beta=coefficients2[2]
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+
+sigma0=np.array([omega1])
+p2=1
+q2=1
+for i in range(0,728):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)+np.sum(sigma0[i:(i+q2)]*beta)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+
+
+# arma（4，0)-arch(3)
+model = ARMA(train, order=(4,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = 0
 
 am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=3) 
 res = am.fit()
 print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:4]
+alpha = alp[::-1]
 
 
-coef1 = 0
-miu1 = 0.0017
-coef2 = 0.0448
-alpha = np.array([0.1216,0.2541,0.5257])
-omega1 = 0.0013108
-
-y = []
-err=np.array([-0.0029087])
+error = train -  model_fit.fittedvalues
 errorsq=error**2
-epsilonsq=errorsq[727:730]
-p=0
-q1=1
-q2=3
-for i in range(0,365):
-    mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
-    sigmasq = np.sum(epsilonsq[i:(i+q2)]*alpha)+omega1
-    epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq))
-    y = np.append(y,mean+epsilon_t)
-    epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
-    err=np.append(err, epsilon_t)
+zero=np.zeros([2])
+errorsq= np.append(zero,errorsq)
 
-plt.plot(y,color='red',linewidth='0.9')
-plt.plot(excess_ret[1460:],linewidth='0.7')
+sigma0=np.array([omega1])
+p2=3
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
 
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
 
+# arma（4，0)-arch(10)
+model = ARMA(train, order=(4,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = 0
 
-
-
-
-
-
-# correlation
-c= Close.rolling(90).corr(CloseB)
-plt.plot(c)
-
-d= Close.rolling(90).std()
-e= CloseB.rolling(90).std()
-plt.plot(d)
-plt.plot(e,color='red')
-
-fig = plt.figure()
-ax1 = fig.add_subplot(211)
-ax1.plot(d,linewidth = '0.5',color='b',label='Ripple')
-plt.legend(loc=2)
-ax1.tick_params(axis='y', colors='b')
-ax1.set_ylabel('Ripple',color='b')
-
-ax1.set_title(' volatility')
-ax2 = ax1.twinx()  # this is the important function
-ax2.plot(e, linewidth = '0.5',color='r',label='Bitcoin')
-plt.legend(loc=1)
-ax2.tick_params(axis='y', colors='r')
-ax2.set_ylabel('Bitcoin',color='r')
-
-ax1 = fig.add_subplot(212)
-c= Close.rolling(90).corr(CloseB)
-plt.plot(c)
-
-plt.show()
-
-
-am = arch.arch_model(train,mean='AR',lags=1,vol='ARCH',p=2) 
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=10) 
 res = am.fit()
-res.params
-res.plot()
-plt.plot(train)
-res.hedgehog_plot()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:11]
+alpha = alp[::-1]
 
-pre = res.forecast(horizon=10,start=478).iloc[478]
-plt.figure(figsize=(10,4))
-plt.plot(test,label='realValue')
-pre.plot(label='predictValue')
-plt.plot(np.zeros(10),label='zero')
-plt.legend(loc=0)
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([9])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=10
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（4，0)-arch(19)
+model = ARMA(train, order=(4,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=19) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:20]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([18])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=19
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（4，0)-GARCH(1,1)
+model = ARMA(train, order=(4,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef = coefficients[1:5]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH')
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alpha = coefficients2[1]
+beta=coefficients2[2]
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+
+sigma0=np.array([omega1])
+p2=1
+q2=1
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)+np.sum(sigma0[i:(i+q2)]*beta)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+
+# arma（1，0)-arch(3)
+model = ARMA(train, order=(1,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1 = coefficients[1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=3) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:4]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([2])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=3
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（1，0)-arch(10)
+model = ARMA(train, order=(1,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1 = coefficients[1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=10) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:11]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([9])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=10
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（1，0)-arch(19)
+model = ARMA(train, order=(1,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1 = coefficients[1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=19) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:20]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([18])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=19
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（1，0)-GARCH(1,1)
+model = ARMA(train, order=(1,0))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1 = coefficients[1]
+miu1 = coefficients[0]
+coef2 = 0
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH')
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alpha = coefficients2[1]
+beta=coefficients2[2]
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+
+sigma0=np.array([omega1])
+p2=1
+q2=1
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)+np.sum(sigma0[i:(i+q2)]*beta)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+
+
+# arma（0，1)-arch(3)
+model = ARMA(train, order=(0,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1= 0
+miu1 = coefficients[0]
+coef2 = coefficients[1]
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=3) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:4]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([2])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=3
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（0，1)-arch(10)
+model = ARMA(train, order=(0,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1= 0
+miu1 = coefficients[0]
+coef2 = coefficients[1]
+
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=10) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:11]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([9])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=10
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（0，1)-arch(19)
+model = ARMA(train, order=(0,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1= 0
+miu1 = coefficients[0]
+coef2 = coefficients[1]
+
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='ARCH',p=19) 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alp= coefficients2[1:20]
+alpha = alp[::-1]
+
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+zero=np.zeros([18])
+errorsq= np.append(zero,errorsq)
+
+sigma0=np.array([omega1])
+p2=19
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+# arma（0，1)-GARCH(1,1)
+model = ARMA(train, order=(0,1))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+coefficients=model_fit.params
+coef1= 0
+miu1 = coefficients[0]
+coef2 = coefficients[1]
+
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH')
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+omega1 = coefficients2[0]
+alpha = coefficients2[1]
+beta=coefficients2[2]
+
+error = train -  model_fit.fittedvalues
+errorsq=error**2
+
+sigma0=np.array([omega1])
+p2=1
+q2=1
+for i in range(0,730):
+    sigmasq=omega1+np.sum(errorsq[i:(i+p2)]*alpha)+np.sum(sigma0[i:(i+q2)]*beta)
+    sigma0=np.append(sigma0,sigmasq)
+
+sigma=sigma0[1:]
+zt=error/np.sqrt(sigma)
+#白噪声检验,p value 小于0.5 not white noise (只有时间序列不是一个白噪声（纯随机序列）的时候，该序列才可做分析)
+from statsmodels.stats.diagnostic import acorr_ljungbox
+#返回统计量和p值
+noiseRes = acorr_ljungbox(zt, lags=1)
+print('stat                  | p-value')
+for x in noiseRes:
+    print(x,'|', end=" ")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

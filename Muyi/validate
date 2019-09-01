@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul 11 17:50:04 2019
+
+@author: guisier
+"""
+
+import numpy as np
+import scipy.stats as st
+from statistics import stdev 
+
+# use ARMA(s,m)-GARCH(1,1) validate (figure 4.3)
+
+validate=[]
+validate[0:728]=excess_ret[728:1456]
+
+s=0
+m=4
+
+# model the conditional mean
+model = ARMA(train, order=(s,m))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+error = train -  model_fit.fittedvalues
+coefficients=model_fit.params
+
+# coefficients
+coef = coefficients[1:s+1]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef3 = coefficients[s+1:s+m+1]
+coef2 = coef3[::-1]
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH') 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+
+# coefficients
+omega1 = coefficients2[0]
+alpha= coefficients2[1]
+beta=coefficients2[2]
+
+# obtain all the error terms 
+y= excess_ret[728-s:1456]
+err= error[728-m:1456]
+p1=s
+q1=m
+for i in range(0,728):
+    mean = np.sum(y[i:(i+p1)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
+    y = np.append(y,mean)
+    err=np.append(err,validate[i]- mean)
+
+err=err[m:]
+error4 = np.append(error,err)
+
+
+# all the sigma square terms
+sigma0=np.array([omega1])
+errorsq=error4**2
+p2=1
+q2=1
+for i in range(0,1455):
+    sigmasq=omega1+errorsq[i:(i+p2)]*alpha+sigma0[i:(i+q2)]*beta
+    sigma0=np.append(sigma0,sigmasq)
+
+
+# validate
+p=s
+q1=m
+p2=1
+q2=1
+M=5000
+l=7
+a = np.zeros((M,l))
+UB = np.zeros(728)
+LB = np.zeros(728)
+for k in range(0,104):
+    
+    for j in range(0,M):
+        y = excess_ret[728-s+7*k:728+7*k]
+        err=error4[728-m+7*k:728+7*k]
+        errorsq=error4**2
+        epsilonsq=errorsq[728-m+7*k:728+7*k]
+        sigmasq=sigma0[728-m+7*k:728+7*k] 
+    
+        for i in range(0,l):
+            mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
+            sigmasq_t = np.sum(epsilonsq[i:(i+q2)]*alpha)+np.sum(sigmasq[i:(i+q2)]*beta)+omega1
+            epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq_t))
+            y = np.append(y,mean+epsilon_t)
+            epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
+            err=np.append(err, epsilon_t)
+            sigmasq=np.append(sigmasq,sigmasq_t)
+        a[j,:] = y[s:]
+    
+    UBk = np.zeros(l)
+    LBk = np.zeros(l)
+    for j in range(0,l):
+        S = a[:,j]
+        (LBk[j],UBk[j])=st.t.interval(0.99, len(S)-1, loc=np.mean(S), scale=stdev(S))
+    UB[7*k:(7*(k+1))]=UBk
+    LB[7*k:(7*(k+1))]=LBk
+
+plt.plot(UB,label='93% upper bound')
+plt.plot(LB,label='93% lower bound')
+plt.plot(validate,color='red',alpha=0.7,linewidth = '0.5',label='R-B')
+plt.legend()
+plt.title('ARMA(0,4)-GARCH(1,1)')
+
+
