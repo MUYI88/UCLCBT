@@ -1,21 +1,30 @@
-%% import data
+%% import data 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%PAY ATTENTION%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The column may change for different version of MATLAB
+%%% Need to check it when importing
+%%% The column in my MATLAB version is:
+%%% date-open-high-low-close-volume-maketcap
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 close all
 format long
 
-%hourly
+%hourly (short-term)
 xrp=importdata('df.xlsx');
-close11=xrp.data(:,4);
+close11=xrp.data(:,5);
 close22=close11;
 closedd=log(close22);
 
-%daily
+%daily (long-term)
 xrp=importdata('xrp_20140101_20190630.xlsx');
-close11=xrp.data(:,4);
+close11=xrp.data(:,5);
 close22=close11(1187:end);
 closedd=log(close22);
 
-%% half year(USED FOR TRADING SIGNALS PLOT)
+%% half year (USED FOR TRADING SIGNALS PLOT)(figure 3.4, 3.7 and 3.9)
 clear all
 close all
 format long
@@ -43,20 +52,36 @@ Date=timeh';
 thh1=datetime(2018,12,1);
 thh2=datetime(2019,6,13);
 
-%% buy and hold
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% buy and hold (for summary table)
+
 r = [0;log(close22(2:end)./close22(1:end-1))];
-cr=sum(r)
-pd=length(closedd)
+cr=sum(r) %cumulative return
+pd=length(closedd) %position days/hours
 
-stdh=std(r)
-prh=length(find(r>0))
-sharph=sharpe(r,0)
+stdh=std(r) %standard deviation
+prh=length(find(r>0)) %positive return days/hours
+sharph=sharpe(r,0) %sharpe ratio
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% ma parameter selection
-annualScaling = sqrt(365*24);
+%% ma parameter selection (for figure 3.5 and 3.6)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%PAY ATTENTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%need to modify the file of mperiod.m when finding the optimal parameter
+%with threshold for short-term strategy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+annualScaling = sqrt(365*24); %for short-term strategy
+%annualScaling = sqrt(365);  %for long-term strategy
 sharpes = nan(100,100);
 
 tic
@@ -67,21 +92,22 @@ for n = 1:100
 end
 toc
 sweepPlotMA(sharpes)
-zlim([-6,4])
+%zlim([-6,4]) %set the range of z-axis %for short-term strategy
+
 [~, bestInd] = max(sharpes(:)); % (Linear) location of max value
 [bestM, bestN] = ind2sub(100, bestInd); % Lead and lag at best value
 
-%% ma backtesting
-lead = movavg(close22,'simple',7);
-lag = movavg(close22,'simple',14);
-v1=movavg(close22,'simple',60);
-v2=movavg(close22,'simple',120);
+%% MA backtesting (for summary table)
+lead = movavg(close22,'simple',23);  %short-term MA %need to set
+lag = movavg(close22,'simple',27);  %long-term MA   %need to set
 mabuy=zeros(size(closedd));
 masell=zeros(size(closedd));
 
 s = zeros(size(closedd));
-s(lead>lag*1.0035) = 1;
-s(lag*1.0035>lead) = -1;
+s(lead>lag*1.0035) = 1; %for threshold
+s(lag*1.0035>lead) = -1;%for threshold
+%s(lead>lag) = 1;
+%s(lag>lead) = -1;
 trades  = [ 0; diff(s(1:end))]; 
 
 
@@ -97,7 +123,9 @@ trades  = [ 0; diff(s(1:end))];
     %mabuy(1:I)=0;
 %end
 
-mabuy(lead>lag*1.0035) = 1;
+
+mabuy(lead>lag*1.0035) = 1; %for threshold
+%mabuy(lead>lag) = 1;
 buytrades=[ 0; diff(mabuy(1:end))];
 cashb=cumsum(-buytrades.*closedd);
 mabuy1=mabuy.*closedd+cashb;%cumulative return
@@ -106,6 +134,7 @@ rmb=[];
 rmb=rb(rb~=0);
 
 masell(lag*1.0035>lead) = -1;
+%masell(lag>lead) = -1;
 selltrades=[ 0; diff(masell(1:end))];
 cashs=cumsum(-selltrades.*closedd);
 masell1=masell.*closedd+cashs;
@@ -131,7 +160,7 @@ prs=length(find(rs>0));
 shb=sharpe(rmb,0);%sharpe ratio
 shs=sharpe(rms,0);
 
-%%%plot
+%% plot (for figure 3.4)
 OHLC = [openh highh lowh close22];
 rise=find(OHLC(:,1)>OHLC(:,4));
 data2=OHLC;
@@ -145,7 +174,7 @@ low=data2(:,3);
 Close=data2(:,4);
 stock2=timetable(Date,open,high,low,Close);
 
-figure(9)
+figure(10)
 
 candle(stock2,'g');
 hold on
@@ -180,24 +209,36 @@ stock4=timetable(Date,open,high,low,Close);
 candle(stock4,'w');
 hold on
 
-longp(trades>0)=close22(trades>0);
+lead = movavg(close22,'simple',7);  %short-term MA
+lag = movavg(close22,'simple',14);  %long-term MA
+v2=movavg(close22,'simple',120);
+longp=[];
+shortp=[];
+l=(lead+lag)/2;
+longp(trades>0)=l(trades>0);
 longt(trades>0)=timeh(trades>0);
-shortp(trades<0)=close22(trades<0);
+shortp(trades<0)=l(trades<0);
 shortt(trades<0)=timeh(trades<0);
 
 h1=plot(timeh,lead,'Linewidth',1.5); hold on; h2=plot(timeh,lag,'Linewidth',1.5);hold on
-h3=plot(timeh,v1,'Linewidth',1.5); hold on; h4=plot(timeh,v2,'Linewidth',1.5);
+%h3=plot(timeh,v1,'Linewidth',1.5); hold on; 
+h4=plot(timeh,v2,'Linewidth',1.5);
 hold on
-plot(longt,longp,'g^','Linewidth',1.0)
+h5=plot(longt,longp,'g^','Linewidth',2,'MarkerSize',10)
 hold on
-plot(shortt,shortp,'rv','Linewidth',1.0)
+h6=plot(shortt,shortp,'rv','Linewidth',2,'MarkerSize',10)
 
-legend([h1 h2 h3 h4],'MA(7)','MA(14)','MA(60)','MA(120)','Location','Best');
-grid on
+legend([h1 h2 h4 h5 h6],'MA(7)','MA(14)','MA(120)','Buy Signal','Sell Signal','Location','Best');
+
+%grid on
 
 ylim([0.28,0.48]);
 xlim([thh1 thh2]);
-%% rsi parameter selection
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% rsi parameter selection (for figure 3.8)
 annualScaling = sqrt(365);
 
 
@@ -215,8 +256,8 @@ xlabel('Period')
 ylabel('Sharpe Ratio')
 
 [~, bestInd] = max(sharpes(:));
-%% rsi backtesting
-M=1;
+%% RSI backtesting (for summary table)
+M=1; %period of RSI
 downThresh=80;
 upThresh=20;
 x=close22;
@@ -277,61 +318,96 @@ prs=length(find(rs>0));
 shb=sharpe(rrb,0);%sharpe ratio
 shs=sharpe(rrs,0);
 
-figure(9)
-longpr(trades>0)=close22(trades>0);
-longtr(trades>0)=timeh(trades>0);
-shortpr(trades<0)=close22(trades<0);
-shorttr(trades<0)=timeh(trades<0);
 
-r = rsi2(x,M);
-h1=plot(timeh,r,'Linewidth',1.5);
+%% plot (for figure 3.7)
+OHLC = [openh highh lowh close22];
+rise=find(OHLC(:,1)>OHLC(:,4));
+data2=OHLC;
+data2(rise,:)=0;%up
+%timeh2=datenum(timeh');
+%timeh2(rise,:)=NaN;
+%date=datenum2datetime(timeh2);
+open=data2(:,1);
+high=data2(:,2);
+low=data2(:,3);
+Close=data2(:,4);
+stock2=timetable(Date,open,high,low,Close);
+
+figure(6)
+subplot(3,1,1)
+candle(stock2,'g');
 hold on
-plot(longtr,longpr,'g^','Linewidth',1.0)
+
+data3=OHLC;
+down=find(OHLC(:,1)<OHLC(:,4));
+data3(down,:)=0;%down
+%timeh3=datenum(timeh');
+%timeh3(down,:)=NaN;
+%date=datenum2datetime(timeh3);
+open=data3(:,1);
+high=data3(:,2);
+low=data3(:,3);
+Close=data3(:,4);
+stock3=timetable(Date,open,high,low,Close);
+candle(stock3,'r');
 hold on
-plot(shorttr,shortpr,'rv','Linewidth',1.0)
-hold on
-h3=plot([th1,th2],[20,20],'--')
-h4=plot([th1,th2],[80,80],'--');
 
 
-legend([h1  h4 h3],'RSI(6)','Overbought','Oversold','Location','Best');
-grid on
+stay=find(OHLC(:,1)~=OHLC(:,4));
+data4=OHLC;
+data4(stay,:)=0;%stay
+%timeh4=datenum(timeh');
+%timeh4(down,:)=NaN;
+%date=datenum2datetime(timeh4);
+open=data4(:,1);
+high=data4(:,2);
+low=data4(:,3);
+Close=data4(:,4);
+stock4=timetable(Date,open,high,low,Close);
+candle(stock4,'w');
 
-%ylim([0.28,0.48]);
+ylim([0.28,0.48]);
 xlim([thh1 thh2]);
 
-%% kdj selection
-annualScaling = sqrt(365);
+r1 = rsi2(close22,M);
+longpr=[];
+shortpr=[];
+longpr(trades>0)=r(trades>0);
+longtr(trades>0)=timeh(trades>0);
+shortpr(trades<0)=r(trades<0);
+shorttr(trades<0)=timeh(trades<0);
+subplot(3,1,[2 3])
+h1=plot(timeh,r1,'Linewidth',1);
+hold on
+h2=plot(timeh,r,'Linewidth',1.5);
+hold on
+h3=plot(longtr,longpr,'g^','Linewidth',2,'MarkerSize',8)
+hold on
+h4=plot(shorttr,shortpr,'rv','Linewidth',2,'MarkerSize',8)
+hold on
+h5=plot([th1,th2],[80,80],'--')
+hold on
+h6=plot([th1,th2],[20,20],'--')
 
 
-sharpes = nan(100,100);
+legend([h1 h2 h3 h4 h5 h6],'RSI(6)','Detrended RSI(6)','Buy Signal','Sell Signal','Overbought','Oversold','Location','Best');
+grid on
 
-tic
-for n = 1:100
-    for m = n:100
-        sharpes(n,m) = kperiod(OHLC,n,m,3,annualScaling);
-    end
-end
-toc
-sweepPlotMA(sharpes)
-xlabel('Period of RSV (days)','HorizontalAlignment','right');
-ylabel('Period of K (days)','HorizontalAlignment','left');
-title('Sharpe ratio as a function of the KDJ model parameters')
+ylim([0,100]);
+xlim([thh1 thh2]);
 
-[~, bestInd] = max(sharpes(:)); % (Linear) location of max value
-[bestM, bestN] = ind2sub(100, bestInd); % Lead and lag at best value
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% kdj(for summary table)
+%OHLC=xrp.data(1187:end,2:5); %daily (for long-term strategy)
+OHLC=xrp.data(:,2:5); %hourly (for short-term strategy)
+%OHLC = [openh highh lowh close22];%for sample plot
 
 
-
-
-%% kdj
-OHLC=xrp.data(1187:end,1:4); %daily
-%OHLC=xrp.data(:,1:4); %hourly
-
-%OHLC = [openh highh lowh close22];%sample plot
-%%
-OHLC=xrp.data(1898:1989,1:4);
-[STR,K,D] = stoc1(OHLC,11,5,5,20,80,60);
+%[STR,K,D] = stoc1(OHLC,12,5,3,20,80,60);%for long-term
+[STR,K,D] = stoc1(OHLC,12,2,3,20,80,55);%for short-term
+%[STR,K,D] = stoc1(OHLC,10,5,5,20,80,55);%for sample plot
 
 trades=zeros(length(closedd),1);
 for i=1:length(STR(:,1))
@@ -366,23 +442,23 @@ buytrades  = [ 0; diff(s1(1:end))];
 cashb=cumsum(-buytrades.*closedd);
 mabuy1=s1.*closedd+cashb;%cumulative return
 rb=[0;diff(mabuy1)];
-rrb=[];
-rrb=rb(rb~=0);
+rkb=[];
+rkb=rb(rb~=0);
 
 selltrades=[ 0; diff(s2(1:end))];
 cashs=cumsum(-selltrades.*closedd);
 masell1=s2.*closedd+cashs;
 rs=[0;diff(masell1)];
-rrs=[];
-rrs=rs(rs~=0);
+rks=[];
+rks=rs(rs~=0);
 
 mabuy1(end)
 masell1(end)
 
 pdb=length(find(s1==1)); %position days
 pds=length(find(s2==-1));
-stdb=std(rrb); %sd
-stds=std(rrs);
+stdb=std(rkb); %sd
+stds=std(rks);
 ntb=length(find(buytrades~=0)); %number of transactions 
 nts=length(find(selltrades~=0));
 cashb1=cumsum(-buytrades.*close22);
@@ -391,49 +467,103 @@ Cb=cashb(end)/ntb; %break-even transation fee
 Cs=cashs(end)/nts;
 prb=length(find(rb>0));%positive return days
 prs=length(find(rs>0));
-shb=sharpe(rrb,0);%sharpe ratio
-shs=sharpe(rrs,0);
-%%
-%plot
+shb=sharpe(rkb,0);%sharpe ratio
+shs=sharpe(rks,0);
+%% plot (for figure 3.9)
 figure(11)
-longpkk(trades1>0)=close22(trades1>0);
+OHLC = [openh highh lowh close22];
+rise=find(OHLC(:,1)>OHLC(:,4));
+data2=OHLC;
+data2(rise,:)=0;%up
+%timeh2=datenum(timeh');
+%timeh2(rise,:)=NaN;
+%date=datenum2datetime(timeh2);
+open=data2(:,1);
+high=data2(:,2);
+low=data2(:,3);
+Close=data2(:,4);
+stock2=timetable(Date,open,high,low,Close);
+
+figure(11)
+subplot(3,1,1)
+candle(stock2,'g');
+hold on
+
+data3=OHLC;
+down=find(OHLC(:,1)<OHLC(:,4));
+data3(down,:)=0;%down
+%timeh3=datenum(timeh');
+%timeh3(down,:)=NaN;
+%date=datenum2datetime(timeh3);
+open=data3(:,1);
+high=data3(:,2);
+low=data3(:,3);
+Close=data3(:,4);
+stock3=timetable(Date,open,high,low,Close);
+candle(stock3,'r');
+hold on
+
+
+stay=find(OHLC(:,1)~=OHLC(:,4));
+data4=OHLC;
+data4(stay,:)=0;%stay
+%timeh4=datenum(timeh');
+%timeh4(down,:)=NaN;
+%date=datenum2datetime(timeh4);
+open=data4(:,1);
+high=data4(:,2);
+low=data4(:,3);
+Close=data4(:,4);
+stock4=timetable(Date,open,high,low,Close);
+candle(stock4,'w');
+
+ylim([0.28,0.48]);
+xlim([thh1 thh2]);
+
+longpkk=[];
+shortpkk=[];
+longpkk(trades1>0)=D(trades1>0);
 longtkk(trades1>0)=timeh(trades1>0);
-shortpkk(trades1<0)=close22(trades1<0);
+shortpkk(trades1<0)=D(trades1<0);
 shorttkk(trades1<0)=timeh(trades1<0);
 
-
+subplot(3,1,[2 3])
 h1=plot(timeh,K);
 hold on
-h2 = plot(timeh,D);
+h2 = plot(timeh,D,'Linewidth',1.5);
 hold on
 J=3*K-2*D;
 h3 = plot(timeh,J);
 hold on
-plot(longtkk,longpkk,'g^','Linewidth',1.0)
+h4=plot(longtkk,longpkk,'g^','Linewidth',2,'MarkerSize',8);
 hold on
-plot(shorttkk,shortpkk,'rv','Linewidth',1.0)
+h5=plot(shorttkk,shortpkk,'rv','Linewidth',2,'MarkerSize',8);
 hold on
-h5=plot([th1,th2],[20,20],'--')
+h7=plot([th1,th2],[20,20],'--');
 hold on
-h4=plot([th1,th2],[80,80],'--');
+h6=plot([th1,th2],[80,80],'--');
 hold on
 plot([th1,th2],[55,55],'--')
 
-legend([h1 h2 h3 h4 h5],{'kdjk','kdjd','kdjj','Overbought','Oversold'},'Location','Best');
+legend([h1 h2 h3 h4 h5 h6 h7],{'K Value (10)','D Value (5)','J Value (5)','Buy Signal','Sell Signal','Overbought','Oversold'},'Location','Best');
 grid on
 
 %ylim([0.28,0.48]);
 xlim([thh1 thh2]);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% rsi+ma
-lead = movavg(close22,'simple',23);
-lag = movavg(close22,'simple',27);
+%% rsi+ma (for summary table)
+lead = movavg(close22,'simple',23); %need to set
+lag = movavg(close22,'simple',27);  %need to set
 mabuy=zeros(size(closedd));
 masell=zeros(size(closedd));
 
-mabuy(lead>lag*1.0035) = 1;
-masell(lag*1.0035>lead) = -1;
+%mabuy(lead>lag) = 1;
+%masell(lag>lead) = -1;
+mabuy(lead>lag*1.0035) = 1; %for ma with threshold
+masell(lag*1.0035>lead) = -1; %for ma with threshold
 
 M=1;
 downThresh=80;
@@ -493,16 +623,21 @@ nts=length(find(selltrades~=0));
 cashb1=cumsum(-buytrades.*close22);
 cashs1=cumsum(-selltrades.*close22);
 Cb=cashb(end)/ntb; %break-even transation fee
-Cs=cashs1(end)/nts;
+Cs=cashs(end)/nts;
 prb=length(find(rb>0));%positive return days
 prs=length(find(rs>0));
 shb=mean(rmrb)/std(rmrb);%sharpe ratio
 shs=mean(rmrs)/std(rmrs);
-%% KDJ+MA
-%OHLC=xrp1.data(1187:end,1:4);
-OHLC=xrp.data(:,1:4);
 
-STR = stoc1(OHLC,12,4,3,20,80,60);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% KDJ+MA (for summary table)
+%OHLC=xrp.data(1187:end,2:5); %for long-term
+OHLC=xrp.data(:,2:5); %for short-term
+
+%STR = stoc1(OHLC,12,5,3,20,80,60); %for long-term
+STR = stoc1(OHLC,12,2,3,20,80,55); %for short-term
 
 trades=zeros(length(closedd),1);
 for i=1:length(STR(:,1))
@@ -534,13 +669,15 @@ s2 = trades;
 s1(s1==-1)=0;%long position
 s2(s2==1)=0;%short position
 
-lead = movavg(close22,'simple',23);
-lag = movavg(close22,'simple',27);
+lead = movavg(close22,'simple',23); %need to set
+lag = movavg(close22,'simple',27);  %need to set
 mabuy=zeros(size(closedd));
 masell=zeros(size(closedd));
 
-mabuy(lead>lag) = 1;
-masell(lag>lead) = -1;
+%mabuy(lead>lag) = 1;
+%masell(lag>lead) = -1;
+mabuy(lead>lag*1.0035) = 1; %for ma with threshold
+masell(lag*1.0035>lead) = -1; %for ma with threshold
 
 pos1 = zeros(S,1);
 pos2 = zeros(S,1);
@@ -579,10 +716,16 @@ prs=length(find(rs>0));
 shb=sharpe(rmkb,0);%sharpe ratio
 shs=sharpe(rmks,0);
 
-%% ma+kdj+rsi
-%OHLC=xrp1.data(1187:end,1:4);
-%OHLC=xrp.data(:,1:4);
-STR = stoc1(OHLC,11,5,5,20,80,60);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ma+kdj+rsi (for summary table)
+%OHLC=xrp.data(1187:end,2:5); %for long-term
+OHLC=xrp.data(:,2:5); %for short-term
+
+%STR = stoc1(OHLC,12,5,3,20,80,60);%for long-term
+STR = stoc1(OHLC,12,2,3,20,80,55);%for short-term
+
 
 trades=zeros(length(closedd),1);
 for i=1:length(STR(:,1))
@@ -613,20 +756,22 @@ k2 = trades;
 k1(k1==-1)=0;%long position
 k2(k2==1)=0;%short position
 
-lead = movavg(close22,'simple',43);
-lag = movavg(close22,'simple',44);
+lead = movavg(close22,'simple',23);%need to set
+lag = movavg(close22,'simple',27); %need to set
 mabuy=zeros(size(closedd));
 masell=zeros(size(closedd));
 
-mabuy(lead>lag) = 1;
-masell(lag>lead) = -1;
+%mabuy(lead>lag) = 1;
+%masell(lag>lead) = -1;
+mabuy(lead>lag*1.0035) = 1; %for ma with threshold
+masell(lag*1.0035>lead) = -1; %for ma with threshold
 
-M=9;
+M=1;
 downThresh=80;
 upThresh=20;
 x=close22;
 S = length(x);
-[~,c] = hpfilter(close22,14400);
+[~,c] = hpfilter(close22,100);
 r = rsi2(x-c,M);
 n1=length(find(r>50));
 n2=length(find(r<50));
@@ -685,3 +830,63 @@ prb=length(find(rb>0));%positive return days
 prs=length(find(rs>0));
 shb=sharpe(rmrkb,0);%sharpe ratio
 shs=sharpe(rmrks,0);
+
+%% boostrapping
+
+%rb=rmb;rs=rms; %for MA
+%rb=rrb;rs=rrs; %for RSI
+%rb=rkb;rs=rks; %for KDJ
+%rb=rmrb;rs=rmrs; %for MA+RSI
+%rb=rmkb;rs=rmks; %for MA+KDJ
+rb=rmrkb;rs=rmrks; %for MA+KDJ+RSI
+
+r = [0;log(close22(2:end)./close22(1:end-1))];
+m=bootstrp(10000,@mean,r);
+m1=bootstrp(10000,@mean,rb);
+mn=m1-m;
+mean1=mean(mn);
+
+CI= prctile(mn,[2.5 97.5])
+
+figure(37)
+h1=histogram(mn,800);
+hold on 
+h11=plot([mean1,mean1],[0,70],'LineWidth',2)
+hold on
+h12=plot([CI(1),CI(1)],[0,70],'y','LineWidth',2)
+hold on
+h13=plot([0,0],[0,70],'--','LineWidth',2);
+hold on
+h14=plot([CI(2),CI(2)],[0,70],'y','LineWidth',2)
+xlim([-0.01 0.01]); %for short-term
+%xlim([-0.074 0.074]); %for long-term
+ylim([0,70]);
+legend([h11,h12,h13],'Average Excess Return','95% Confidence Interval','Zero','Location','Best')
+
+
+figure(38)
+m2=bootstrp(10000,@mean,rs);
+
+mn2=m2-m;
+mean2=mean(mn2);
+
+CI2= prctile(mn2,[2.5 97.5])
+
+h1=histogram(mn2,800);
+hold on 
+h11=plot([mean2,mean2],[0,70],'LineWidth',2)
+hold on
+h12=plot([CI2(1),CI2(1)],[0,70],'y','LineWidth',2)
+hold on
+h13=plot([0,0],[0,70],'--','LineWidth',2);
+hold on
+h14=plot([CI2(2),CI2(2)],[0,70],'y','LineWidth',2)
+
+xlim([-0.01 0.01]); %for short-term
+%xlim([-0.074 0.074]); %for long-term
+ylim([0,70]);        
+legend([h11,h12,h13],'Average Excess Return','95% Confidence Interval','Zero','Location','Best')
+
+
+
+
