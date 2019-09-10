@@ -1,0 +1,100 @@
+# 用arma（0,4)-GARCH（1,1）predict 
+train=[]
+train[0:1456]=excess_ret[0:1456]
+
+pre=[]
+pre[0:371]=excess_ret[1456:1827]
+
+s=0
+m=4
+
+model = ARMA(train, order=(s,m))
+model_fit = model.fit(disp=-1)
+print(model_fit.summary())
+error = train -  model_fit.fittedvalues
+coefficients=model_fit.params
+
+
+coef = coefficients[1:s+1]
+coef1= coef[::-1]
+miu1 = coefficients[0]
+coef3 = coefficients[s+1:s+m+1]
+coef2 = coef3[::-1]
+
+
+am = arch.arch_model(error,mean='zero',lags=0,vol='GARCH') 
+res = am.fit()
+print(res.summary())
+coefficients2=res.params
+
+
+omega1 = coefficients2[0]
+alpha= coefficients2[1]
+beta=coefficients2[2]
+
+
+y = excess_ret[1456-s:]
+err= error[1456-m:]
+p1=s
+q1=m
+for i in range(0,371):
+    mean = np.sum(y[i:(i+p1)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
+    y = np.append(y,mean)
+    err=np.append(err,pre[i]- mean)
+
+err=err[m:]
+error5 = np.append(error4,err)
+
+
+sigma0=np.array([omega1])
+errorsq=error5**2
+p2=1
+q2=1
+for i in range(0,1827):
+    sigmasq=omega1+errorsq[i:(i+p2)]*alpha+sigma0[i:(i+q2)]*beta
+    sigma0=np.append(sigma0,sigmasq)
+
+
+p=s
+q1=m
+p2=1
+q2=1
+M=5000
+l=7
+a = np.zeros((M,l))
+UB = np.zeros(371)
+LB = np.zeros(371)
+for k in range(0,53):
+    
+    for j in range(0,M):
+        y = excess_ret[1456-s+7*k:1456+7*k]
+        err=error5[1456-m+7*k:1456+7*k]
+        errorsq=error5**2
+        epsilonsq=errorsq[1456-m+7*k:1456+7*k]
+        sigmasq=sigma0[1456-m+7*k:1456+7*k] 
+    
+        for i in range(0,l):
+            mean = np.sum(y[i:(i+p)]*coef1)+np.sum(err[i:(i+q1)]*coef2)+miu1
+            sigmasq_t = np.sum(epsilonsq[i:(i+q2)]*alpha)+np.sum(sigmasq[i:(i+q2)]*beta)+omega1
+            epsilon_t = np.random.normal(loc=0,scale = sqrt(sigmasq_t))
+            y = np.append(y,mean+epsilon_t)
+            epsilonsq = np.append(epsilonsq, epsilon_t*epsilon_t)
+            err=np.append(err, epsilon_t)
+            sigmasq=np.append(sigmasq,sigmasq_t)
+        a[j,:] = y[s:]
+    
+    UBk = np.zeros(l)
+    LBk = np.zeros(l)
+    for j in range(0,l):
+        S = a[:,j]
+        (LBk[j],UBk[j])=st.t.interval(0.99, len(S)-1, loc=np.mean(S), scale=stdev(S))
+    UB[7*k:(7*(k+1))]=UBk
+    LB[7*k:(7*(k+1))]=LBk
+
+plt.plot(UB,label='93% upper bound')
+plt.plot(LB,label='93% lower bound')
+plt.plot(pre,color='red',alpha=0.7,linewidth = '0.5',label='R-B')
+plt.legend()
+plt.title('ARMA(0,4)-GARCH(1,1)')
+
+
