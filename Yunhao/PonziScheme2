@@ -1,0 +1,78 @@
+clc
+clear
+
+people_num=[];
+income=[];
+Expenditure=[];
+profit=[];
+balance=[];
+
+people_num(1)=200;   
+increate_rate=0.30;   
+ROI=0.06;     
+people_money=1000;  
+withdraw_ratio=0.45;
+selling_expense_ratio=0.04;
+N=30; 
+for i=1:N
+    if i==1
+        people_num(i)=200;
+        income(i)=people_num(i)*people_money+0;
+        Expenditure(i)=income(i)*selling_expense_ratio;
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    else
+        people_num(i)=people_num(i-1)*(1+increate_rate);
+        income(i)=people_num(i)*people_money+income(i-1)*(1-withdraw_ratio);
+        Expenditure(i)=income(i-1)*(1+ROI)+income(i)*selling_expense_ratio;
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    end
+    if people_num(i)>25000
+        break
+    end
+end
+increate_rate=-0.08;   
+for j=i:N
+         people_num(j)=people_num(j-1)*(1+increate_rate);
+         income(j)=people_num(j)*people_money+income(j-1)*(1-withdraw_ratio);
+         Expenditure(j)=income(j-1)*(1+ROI)+income(j)*selling_expense_ratio;
+         profit(j)=income(j)-Expenditure(j);
+         balance(j)=sum(profit);
+end
+f1=plot(income,'r','LineWidth',1.5);
+hold on
+f2=plot(Expenditure,'k','LineWidth',1.5);
+hold on
+f3=plot(profit,'b','LineWidth',1.5);
+hold on
+f4=plot(balance,'c','LineWidth',1.5);
+hold on
+x=[21,22,19,20,19,24,25];
+y=[income(21),Expenditure(22),profit(19),profit(20),balance(19),balance(24),balance(25)];
+plot(x,y,'*');
+grid on
+xlabel('month','Fontsize',18);
+ylabel('USD','Fontsize',18);
+title('The Cash Flow Of A Ponzi Scheme','Fontsize',18);
+ha=gca;
+set(ha,'xLim',[0,N]);
+set(ha,'xTick',[1:N]);
+legend([f1,f2,f3,f4],'Income','Expenditure','Net Capital Inflow','Balance','location','northwest','Fontsize',16);
+hold off
+word1=text(21,4.221*10^7,'(21,4.221*10^7)');
+word2=text(22,4.637*10^7,'(22,4.637*10^7)');
+word3=text(19,5.638*10^6,'(19,5.638*10^6)');
+word4=text(20,-8.757*10^5,'(20,-8.757*10^5)');
+word5=text(19,2.458*10^7,'(19,2.458*10^7)');
+word6=text(24,1.462*10^6,'(24,1.462*10^6)');
+word7=text(25,-4.601*10^6,'(25,-4.601*10^6)');
+
+set(word1,'Fontsize',8);
+set(word2,'Fontsize',8);
+set(word3,'Fontsize',8);
+set(word4,'Fontsize',8);
+set(word5,'Fontsize',8);
+set(word6,'Fontsize',8);
+set(word7,'Fontsize',8);
+
