@@ -1,0 +1,71 @@
+clc
+clear
+
+people_num=[];
+income=[];
+Expenditure=[];
+profit=[];
+balance=[];
+sigmoid=[];
+withdraw_ratio=[];
+be_found_month=[];
+
+people_num(1)=200;  
+leverage_ratio=5;
+increase_rate=0.03; 
+decrease_rate=-0.4;
+ROI=0.2;    
+people_money=2000;  
+N_month=48; 
+found_rate = 0.001;
+p_found = 0.3;
+
+
+sigmoid(1)=(1./(1+exp(-1.5*1+10)));
+people_num(1)=200;
+P(1)=(1-10)^2/500;
+income(1)=people_num*people_money*leverage_ratio*sigmoid(1);
+Expenditure(1)=0;
+profit(1)=income(1)-Expenditure(1);
+balance(1)=sum(profit);
+ 
+be_found = 0;
+be_found = [];
+for i = 2:N_month
+    consensus = i*found_rate;
+    if (rand(1) < consensus) | (be_found == 1)
+        be_found=1;
+        P(i)=(i-10)^2/500;
+        income(i)=0;
+        Expenditure(i)=income(i-1)*(1+ROI)*P(i);
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    else    
+        people_num(i)=people_num(i-1)*(1+increase_rate);
+        sigmoid(i)=(1./(1+exp(-1.5*i+10)));
+        P(i)=(i-10)^2/500;
+        withdraw_ratio =0.5*(1+erf(i*P(i)/2^0.5));
+        income(i)=people_num(i)*people_money*leverage_ratio*sigmoid(i)+income(i-1)*(1+ROI)*(1-withdraw_ratio);
+        Expenditure(i)=income(i-1)*(1+ROI)*withdraw_ratio;
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    end
+end
+figure(1);
+f1=plot(income,'r','LineWidth',1.5);
+hold on
+f2=plot(Expenditure,'k','LineWidth',1.5);
+hold on
+f3=plot(profit,'b','LineWidth',1.5);
+hold on
+f4=plot(balance,'g','LineWidth',1.5);
+hold on
+grid on
+xlabel('month','Fontsize',18);
+ylabel('USD','Fontsize',18);
+title('The Cash Flow Of A Ponzi Scheme','Fontsize',18);
+ha=gca;
+set(ha,'xLim',[0,N_month]);
+set(ha,'xTick',[1:N_month]);
+legend([f1,f2,f3,f4],'Income','Expenditure','Net Capital Inflow','Balance','location','northeast','Fontsize',16);
+hold off
