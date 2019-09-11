@@ -1,1 +1,65 @@
 
+clc
+clear
+
+people_num=[];
+income=[];
+Expenditure=[];
+profit=[];
+balance=[];
+people_num(1)=200;  
+increate_rate=0.05;   
+ROI=0.06;    
+people_money=1000;  
+withdraw_tario=0.45; 
+selling_expense_ratio=0.04;
+N=23; 
+for i=1:N
+    if i==1
+        people_num(i)=200;
+        income(i)=people_num(i)*people_money+0;
+        Expenditure(i)=income(i)*selling_expense_ratio;
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    else
+        people_num(i)=people_num(i-1)*(1+increate_rate);
+        income(i)=people_num(i)*people_money+income(i-1)*(1-withdraw_tario);
+        Expenditure(i)=income(i-1)*(1+ROI)+income(i)*selling_expense_ratio;
+        profit(i)=income(i)-Expenditure(i);
+        balance(i)=sum(profit);
+    end
+end
+f1=plot(income,'r','LineWidth',1.5);
+hold on
+f2=plot(Expenditure,'k','LineWidth',1.5);
+hold on
+f3=plot(profit,'b','LineWidth',1.5);
+hold on
+f4=plot(balance,'c','LineWidth',1.5);
+hold on
+x=[4,5,4,5,15,16];
+y=[profit(4),profit(5),balance(4),balance(5),balance(15),balance(16)];
+plot(x,y,'*');
+grid on
+xlabel('month','Fontsize',18);
+ylabel('USD','Fontsize',18);
+title('The Cash Flow Of A Ponzi Scheme','Fontsize',18);
+ha=gca;
+set(ha,'xLim',[0,N]);
+set(ha,'xTick',[1:N]);
+legend([f1,f2,f3,f4],'Income','Expenditure','Net Capital Inflow','Balance','location','northwest','Fontsize',16);
+hold off
+word1=text(4,15000,'(4,5663)');
+word2=text(5,-18000,'(5,-2905)');
+word3=text(4,1.9*10^5,'(4,1.7*10^5)');
+word4=text(5,1.45*10^5,'(5,1.671*10^5)');
+word5=text(15,1.2*10^4,'(15,1.2*10^4)');
+word6=text(16,-9610,'(16,-9610)');
+set(word1,'Fontsize',12);
+set(word2,'Fontsize',12);
+set(word3,'Fontsize',12);
+set(word4,'Fontsize',12);
+set(word5,'Fontsize',12);
+set(word6,'Fontsize',12);
+
+
