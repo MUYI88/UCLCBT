@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7c8729c4-67bd-4017-afd9-9d03930fc0ba" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Forensics" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Cryptocurrency Forensics.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-9624">
+              <caret line="161" column="16" lean-forward="true" selection-start-line="161" selection-start-column="16" selection-end-line="161" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ripple Data Analysis.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="93">
+              <caret line="1996" column="24" lean-forward="true" selection-start-line="1996" selection-start-column="24" selection-end-line="1996" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/OfferCancel Analysis.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="231">
+              <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16320">
+              <caret line="1088" selection-start-line="1088" selection-end-line="1088" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>dump</find>
+      <find>100000</find>
+      <find>offercreate</find>
+      <find>一天天</find>
+      <find>rest</find>
+      <find>account_sequence</find>
+      <find>enumerate</find>
+      <find>count</find>
+      <find>value_counts</find>
+      <find>1000000</find>
+      <find>adju</find>
+      <find>address5_offer</find>
+      <find>affec</find>
+      <find>affected_node</find>
+      <find>wspace</find>
+      <find>twin</find>
+      <find>subplot</find>
+      <find>figure13</find>
+      <find>font</find>
+      <find>fontdict</find>
+      <find>fontdi</find>
+      <find>figure</find>
+      <find>DATA_0426</find>
+      <find>csv</find>
+      <find>else</find>
+      <find>enum</find>
+      <find>np.</find>
+      <find>concat</find>
+      <find>expenditure</find>
+      <find>load</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>transaction</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/pyecharts" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/pyecharts/example/pie_example.py" />
+        <option value="$PROJECT_DIR$/Forensics Data Analysis.py" />
+        <option value="$PROJECT_DIR$/Cryptocurrency Forensics.py" />
+        <option value="$PROJECT_DIR$/Test.py" />
+        <option value="$PROJECT_DIR$/Data.py" />
+        <option value="$PROJECT_DIR$/Ripple Data Analysis.py" />
+        <option value="$PROJECT_DIR$/OfferCancel Analysis.py" />
+        <option value="$PROJECT_DIR$/market manipulation.py" />
+        <option value="$PROJECT_DIR$/Data analysis.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="22" />
+    <option name="y" value="23" />
+    <option name="width" value="1379" />
+    <option name="height" value="801" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Forensics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Forensics" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="Forensics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/PycharmProjects/Forensics" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.pie_example">
+    <configuration name="Cryptocurrency Forensics" type="PythonConfigurationType" factoryName="Python">
+      <module name="Forensics" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Cryptocurrency Forensics.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="Forensics" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pie_example" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Forensics" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyecharts/example" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyecharts/example/pie_example.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_pie" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Forensics" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyecharts/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyecharts/test/test_pie.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.pie_example" />
+        <item itemvalue="Python.test_pie" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_MODE" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7c8729c4-67bd-4017-afd9-9d03930fc0ba" name="Default Changelist" comment="" />
+      <created>1560779281199</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1560779281199</updated>
+      <workItem from="1560779286626" duration="817000" />
+      <workItem from="1560780160190" duration="12122000" />
+      <workItem from="1561047531449" duration="15173000" />
+      <workItem from="1561232249107" duration="1117000" />
+      <workItem from="1561233570287" duration="567000" />
+      <workItem from="1561234188794" duration="892000" />
+      <workItem from="1561277604018" duration="11862000" />
+      <workItem from="1561488701624" duration="69007000" />
+      <workItem from="1561845588062" duration="7218000" />
+      <workItem from="1561888277412" duration="5179000" />
+      <workItem from="1561906702728" duration="685000" />
+      <workItem from="1561908878170" duration="3801000" />
+      <workItem from="1561914116594" duration="6605000" />
+      <workItem from="1561922191440" duration="14417000" />
+      <workItem from="1561940914071" duration="552000" />
+      <workItem from="1561941599581" duration="18788000" />
+      <workItem from="1561993679074" duration="28293000" />
+      <workItem from="1562089085587" duration="2741000" />
+      <workItem from="1562103353953" duration="9216000" />
+      <workItem from="1562153048041" duration="5448000" />
+      <workItem from="1562163688072" duration="486000" />
+      <workItem from="1562166303674" duration="954000" />
+      <workItem from="1562167443153" duration="970000" />
+      <workItem from="1562168801573" duration="499000" />
+      <workItem from="1562169718620" duration="1357000" />
+      <workItem from="1562171845876" duration="239000" />
+      <workItem from="1562173005781" duration="1034000" />
+      <workItem from="1562174240972" duration="1989000" />
+      <workItem from="1562180550435" duration="805000" />
+      <workItem from="1562181481877" duration="7255000" />
+      <workItem from="1562234630193" duration="3998000" />
+      <workItem from="1562249522173" duration="453000" />
+      <workItem from="1562250575196" duration="289000" />
+      <workItem from="1562252012491" duration="19713000" />
+      <workItem from="1562440961023" duration="1143000" />
+      <workItem from="1562443952986" duration="785000" />
+      <workItem from="1562446410407" duration="880000" />
+      <workItem from="1562448971303" duration="3033000" />
+      <workItem from="1562453837444" duration="3054000" />
+      <workItem from="1562458345476" duration="2217000" />
+      <workItem from="1562499738924" duration="2038000" />
+      <workItem from="1562517237766" duration="1014000" />
+      <workItem from="1562527622533" duration="462000" />
+      <workItem from="1562528087217" duration="897000" />
+      <workItem from="1562529340329" duration="891000" />
+      <workItem from="1562530433583" duration="883000" />
+      <workItem from="1562531914047" duration="1156000" />
+      <workItem from="1562595443793" duration="7823000" />
+      <workItem from="1562607312059" duration="10031000" />
+      <workItem from="1562622522733" duration="194000" />
+      <workItem from="1562622719504" duration="842000" />
+      <workItem from="1562623890297" duration="635000" />
+      <workItem from="1562625026187" duration="1480000" />
+      <workItem from="1562627547590" duration="24402000" />
+      <workItem from="1562804047362" duration="23265000" />
+      <workItem from="1563393061443" duration="29004000" />
+      <workItem from="1563726530889" duration="10245000" />
+      <workItem from="1563808448218" duration="21036000" />
+      <workItem from="1564238067863" duration="20678000" />
+      <workItem from="1564261104020" duration="9848000" />
+      <workItem from="1564324451542" duration="27000" />
+      <workItem from="1564327836926" duration="35382000" />
+      <workItem from="1564512186288" duration="3703000" />
+      <workItem from="1564520129322" duration="672000" />
+      <workItem from="1564523354324" duration="37904000" />
+      <workItem from="1565108613879" duration="4823000" />
+      <workItem from="1565125679436" duration="55924000" />
+      <workItem from="1565305998328" duration="9517000" />
+      <workItem from="1565357815210" duration="33097000" />
+      <workItem from="1565483792277" duration="18000" />
+      <workItem from="1565528440618" duration="2744000" />
+      <workItem from="1565550930690" duration="31438000" />
+      <workItem from="1565695211642" duration="29000" />
+      <workItem from="1565695259577" duration="1073000" />
+      <workItem from="1565699875111" duration="13620000" />
+      <workItem from="1565727952027" duration="42318000" />
+      <workItem from="1566072506548" duration="47209000" />
+      <workItem from="1566228418466" duration="54733000" />
+      <workItem from="1566739758828" duration="42921000" />
+      <workItem from="1567524903870" duration="31704000" />
+      <workItem from="1568514095488" duration="8451000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="889784000" />
+  </component>
+  <component name="TodoView" selected-index="2">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="22" y="23" width="1379" height="801" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4918033" visible="true" weight="0.15332834" />
+      <window_info id="Structure" order="1" sideWeight="0.50617284" side_tool="true" weight="0.29250187" />
+      <window_info id="Favorites" order="2" sideWeight="0.5081967" side_tool="true" weight="0.34743875" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32846716" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32876712" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.33850494" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" weight="0.329927" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.38827023" side_tool="true" weight="0.5035261" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.32876712" />
+      <window_info anchor="bottom" id="Terminal" order="12" weight="0.32722145" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="13" sideWeight="0.61172974" visible="true" weight="0.5035261" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" x="659" y="70" width="573" height="617" id="SciView" order="3" sideWeight="0.67105263" weight="0.1907255" />
+      <window_info anchor="right" id="Database" order="4" sideWeight="0.49671054" weight="0.39420936" />
+      <window_info anchor="right" x="0" y="0" width="265" height="476" id="Documentation" order="5" sideWeight="0.32894737" side_tool="true" weight="0.4178982" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/pyecharts" />
+    </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/OfferCancel Analysis.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Ripple Data Analysis.py</url>
+          <line>1433</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Forensics$Cryptocurrency_Forensics.coverage" NAME="Cryptocurrency Forensics Coverage Results" MODIFIED="1560859307045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="setValue">
+      <expression>
+        <expression-string>'rPMzWvu7WZmWtTQb4bH9HdxGKHeWNy4vyN'</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>&lt;class 'list'&gt;: [4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, '8', 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8...</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>'20190426000041|000046803743|00002'</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751], ['AccountRoot', 1681149], ['DirectoryNode', 467108], ['offer', 46190], ['other', 21773]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['offer', 46190], ['other', 21773]['RippleState', 781751], ['AccountRoot', 1681149], ['DirectoryNode', 467108]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751], ['offer', 46190] ['other', 21773], ['AccountRoot', 1681149], ['DirectoryNode', 467108]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751], ['other', 21773], ['offer', 46190], ['AccountRoot', 1681149], ['DirectoryNode', 467108]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751],['other', 21773], ['AccountRoot', 1681149], ['DirectoryNode', 467108], ['offer', 46190], ]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751], ['AccountRoot', 1681149], ['DirectoryNode', 467108], ['SignerList', 17313], ['Offer', 46190], ['other', 4460]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[['RippleState', 781751], ['AccountRoot', 1681149], ['DirectoryNode', 467108], ['SignerList', 17313], ['Offer', 46190], ['LedgerHashes', 729], ['PayChannel', 2364], ['Escrow', 1365], ['FeeSettings', 1], ['Amendments', 1]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Variable.data">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rippleledger.json">
+      <provider selected="true" editor-type-id="LargeFileEditor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rippleledger-2.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="68">
+          <caret line="16355" selection-start-line="16355" selection-end-line="16355" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyecharts/test/test_pie.py" />
+    <entry file="file://$PROJECT_DIR$/pyecharts/pyecharts/charts/basic_charts/pie.py" />
+    <entry file="file://$PROJECT_DIR$/pyecharts/pyecharts/options/charts_options.py" />
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/requests/sessions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="511" selection-start-line="511" selection-end-line="511" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/urllib3/contrib/pyopenssl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1410">
+          <caret line="289" column="41" lean-forward="true" selection-start-line="289" selection-end-line="289" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_bundle/pydev_console_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="220" selection-start-line="220" selection-end-line="220" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/pyecharts/charts/basic_charts/pie.py" />
+    <entry file="file://$PROJECT_DIR$/pyecharts/example/pie_example.py" />
+    <entry file="file://$PROJECT_DIR$/pyecharts/pyecharts/options/series_options.py" />
+    <entry file="file://$PROJECT_DIR$/Forensics Data Analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyecharts/charts/base.py" />
+    <entry file="file://$PROJECT_DIR$/bar.py" />
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/selenium/webdriver/chrome/webdriver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/matplotlib/text.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="1784" selection-start-line="1784" selection-end-line="1784" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/IPython/core/interactiveshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="3295" selection-start-line="3295" selection-end-line="3295" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/matplotlib/colors.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="173" selection-start-line="173" selection-end-line="173" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16320">
+          <caret line="1088" selection-start-line="1088" selection-end-line="1088" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cryptocurrency Forensics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9624">
+          <caret line="161" column="16" lean-forward="true" selection-start-line="161" selection-start-column="16" selection-end-line="161" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="22" column="18" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="445" column="43" selection-start-line="445" selection-start-column="39" selection-end-line="445" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ripple Data Analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="1996" column="24" lean-forward="true" selection-start-line="1996" selection-start-column="24" selection-end-line="1996" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/market manipulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OfferCancel Analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
